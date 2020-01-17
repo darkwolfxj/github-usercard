@@ -68,16 +68,15 @@ function createCard(obj){
     return card;
     }
 let cards=document.querySelector('.cards')
-// axios.get('https://api.github.com/users/darkwolfxj')
-//   .then(data=>cards.append(createCard(data.data)))
-//   .catch(err=> console.log(err))
+
 var followersArray=[]
 axios.get('https://api.github.com/users/darkwolfxj/followers')
-.then(((data)=> {
-  // console.log(data.data); 
-  data.data.forEach(obj=>followersArray.push(obj.login));
-  followersArray.forEach(user=>axios.get(`https://api.github.com/users/${user}`)
+.then(
+  (data => {
+      data.data.forEach(obj=>followersArray.push(obj.login));
+  
+      followersArray.forEach(user=>axios.get(`https://api.github.com/users/${user}`)
+
   .then(data=>cards.append(createCard(data.data))
   )
 )}));
-console.log(followersArray)
