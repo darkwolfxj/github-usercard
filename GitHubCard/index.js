@@ -24,32 +24,60 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
-
-<div class="card">
-  <img src={image url of user} />
-  <div class="card-info">
-    <h3 class="name">{users name}</h3>
-    <p class="username">{users user name}</p>
-    <p>Location: {users location}</p>
-    <p>Profile:  
-      <a href={address to users github page}>{address to users github page}</a>
-    </p>
-    <p>Followers: {users followers count}</p>
-    <p>Following: {users following count}</p>
-    <p>Bio: {users bio}</p>
-  </div>
-</div>
-
 */
+function createCard(obj){
+    //create elements
+    let card=document.createElement('div'),
+        img=document.createElement('img'),
+        cardInfo=document.createElement('div'),
+        name=document.createElement('h3'),
+        username=document.createElement('p'),
+        location=document.createElement('p'),
+        profile=document.createElement('p'),
+        profileLink=document.createElement('a'),
+        followers=document.createElement('p'),
+        following=document.createElement('p'),
+        bio=document.createElement('p');
+    //append elements
 
-/* List of LS Instructors Github username's: 
-  tetondan
-  dustinmyers
-  justsml
-  luishrd
-  bigknell
-*/
+    cardInfo.append(name, username, location, profile, followers, following, bio);
+    profile.append(profileLink);
+    card.append(img, cardInfo);
+
+    //set attributes
+    img.src=obj.avatar_url;
+    name.textContent=obj.name;
+    username.textContent=obj.login;
+    location.textContent=`Location: ${obj.location}`;
+    profileLink.href=obj.html_url;
+    profileLink.textContent=`Profile: ${obj.html_url}`;
+    profileLink.target='_blank';
+    followers.textContent=`Followers: ${obj.followers}`;
+    following.textContent=`Following: ${obj.following}`;
+    bio.textContent=`Bio: ${obj.bio}`;
+    //set classes
+    card.classList.add('card');
+    cardInfo.classList.add('card-info');
+    name.classList.add('name');
+    username.classList.add('username');
+
+    return card;
+    }
+let cards=document.querySelector('.cards')
+// axios.get('https://api.github.com/users/darkwolfxj')
+//   .then(data=>cards.append(createCard(data.data)))
+//   .catch(err=> console.log(err))
+var followersArray=[]
+axios.get('https://api.github.com/users/darkwolfxj/followers')
+.then(((data)=> {
+  // console.log(data.data); 
+  data.data.forEach(obj=>followersArray.push(obj.login));
+  followersArray.forEach(user=>axios.get(`https://api.github.com/users/${user}`)
+  .then(data=>cards.append(createCard(data.data))
+  )
+)}));
+console.log(followersArray)

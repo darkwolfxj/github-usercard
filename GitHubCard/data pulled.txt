@@ -1,0 +1,8 @@
+data.avatar_url
+data.name
+data.login
+data.location
+data.html_url
+data.followers
+data.following
+data.bio
